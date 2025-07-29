@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Supabase Authentication
 
-## Getting Started
+This project integrates [Supabase](https://supabase.com/) authentication with a Next.js application. Supabase provides a backend-as-a-service with authentication, database, and storage features.
 
-First, run the development server:
+### Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Email/password authentication using Supabase Auth
+- Secure session management
+- Example sign up, sign in, and sign out flows
+- Easily extendable for social logins
+
+## Setup Supabase
+
+1. [Create a Supabase project](https://app.supabase.com/).
+2. Go to the "Project Settings" > "API" section and copy your `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+3. Create a `.env.local` file in your project root:
+
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+    ```
+
+4. Install the Supabase client:
+
+    ```bash
+    npm install @supabase/supabase-js
+    ```
+
+## Usage
+
+- Update authentication logic in your components/pages as needed.
+- Refer to the [Supabase Auth docs](https://supabase.com/docs/guides/auth) for advanced usage.
+
+## Example Auth Usage
+
+```ts
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// Sign up
+await supabase.auth.signUp({ email, password });
+
+// Sign in
+await supabase.auth.signInWithPassword({ email, password });
+
+// Sign out
+await supabase.auth.signOut();
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Resources
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Supabase Docs](https://supabase.com/docs)
+- [Supabase Auth Quickstart](https://supabase.com/docs/guides/auth/quickstarts/nextjs)
+- [Next.js + Supabase Example](https://github.com/vercel/next.js/tree/canary/examples/with-supabase)

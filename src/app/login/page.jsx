@@ -1,81 +1,124 @@
 'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { supabase } from '@/lib/supabaseClient'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+const signupSchema = yup.object().shape({
+  email: yup.string().email('Invalid email format').required('Email is required'),
+  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required('Please confirm your password'),
+})
+
+export default function SignupPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(signupSchema),
+  })
+
+  const onSubmit = async (data) => {
     setLoading(true)
 
-    if (!email || !password) {
-      toast.error('Email and password are required.')
-      setLoading(false)
-      return
-    }
+    const { email, password } = data
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/auth/callback',
+      },
     })
 
     if (error) {
-      toast.error(error.message)
-    } else {
-      if (!data.user?.email_confirmed_at) {
-        toast.warning('Please confirm your email before logging in.')
-        await supabase.auth.signOut()
+      if (error.message.includes('User already registered')) {
+        toast.error('This email is already registered. Please log in.')
       } else {
-        toast.success('Login successful!')
-        router.push('/')
+        toast.error(error.message)
       }
+    } else {
+      toast.success('Signup successful. Please check your email to confirm.')
+      reset()
     }
+
     setLoading(false)
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-white px-4">
       <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white border border-gray-200 p-8 rounded-xl shadow-lg w-full max-w-md space-y-4"
       >
-        <h1 className="text-2xl font-semibold mb-6 text-center">Login</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <h1 className="text-3xl font-bold text-center text-green-700">Sign Up</h1>
+
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            {...register('email')}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          {errors.email && (
+            <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <input
+            type="password"
+            placeholder="Password"
+            {...register('password')}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          {errors.password && (
+            <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+          )}
+        </div>
+
+        <div>
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            {...register('confirmPassword')}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-500 mt-1">{errors.confirmPassword.message}</p>
+          )}
+        </div>
+
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 rounded bg-green-600 text-white cursor-pointer hover:bg-green-700 transition disabled:opacity-50`}
+          className="w-full py-2 rounded bg-green-600 text-white font-medium hover:bg-green-700 transition disabled:opacity-50"
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Creating account...' : 'Sign Up'}
         </button>
-        <p className="mt-4 text-center text-gray-600 text-sm">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-green-600 hover:underline">
-            Sign up
+
+        <p className="text-center text-sm text-gray-600">
+          Already have an account?{' '}
+          <Link href="/login" className="text-green-600 hover:underline font-medium">
+            Login
           </Link>
         </p>
       </form>
+
       <ToastContainer />
     </div>
   )
