@@ -1,4 +1,4 @@
-## Supabase Authentication
+<!-- ## Supabase Authentication
 
 This project integrates [Supabase](https://supabase.com/) authentication with a Next.js application. Supabase provides a backend-as-a-service with authentication, database, and storage features.
 
@@ -119,4 +119,4 @@ supabase-auth/
 4. **Protected Routes:** Certain pages check for an active session and restrict access if the user is not authenticated.
 5. **Extensibility:** The authentication logic is modular, making it easy to add social logins or other providers supported by Supabase.
 
-This structure is ensures a clear separation of concerns and provides a solid foundation for building secure, scalable authentication in Next.js applications.
+This structure ensures a clear separation of concerns and provides a solid foundation for building secure, scalable authentication in Next.js applications. -->
