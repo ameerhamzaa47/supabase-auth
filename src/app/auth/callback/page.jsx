@@ -13,14 +13,14 @@ export default function AuthCallbackPage() {
       if (error) {
         console.error('Error restoring session:', error.message)
       } else if (data?.session) {
-        router.push('/dashboard')
+        router.push('/')
       } else {
         // Try to recover session from URL fragment (access_token etc.)
         const { error: hashError } = await supabase.auth.getSessionFromUrl()
         if (hashError) {
           console.error('Session error from URL:', hashError.message)
         } else {
-          router.push('/dashboard')
+          router.push('/')
         }
       }
     }

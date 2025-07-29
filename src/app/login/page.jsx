@@ -35,7 +35,7 @@ export default function LoginPage() {
         await supabase.auth.signOut()
       } else {
         toast.success('Login successful!')
-        router.push('/dashboard')
+        router.push('/')
       }
     }
     setLoading(false)
