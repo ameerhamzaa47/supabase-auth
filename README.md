@@ -29,8 +29,8 @@ Includes email-based sign-in, protected routes, and automatic redirection after 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/ameerhamzaa47/supabase-auth
+cd supabase-auth
 
 2. Install dependencies
 
@@ -39,8 +39,8 @@ npm install
 yarn install
 
 
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_URL=https://xoaviixgmtshuuliugtr.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvYXZpaXhnbXRzaHV1bGl1Z3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3OTk2NzAsImV4cCI6MjA2OTM3NTY3MH0.kbptfbg4tn1mTtaJExVwlMsACcEzY0Nt0hC0v1rVTQ8
 You can find these in your Supabase project's dashboard under Settings > API.
 
 🚀 Running the App Locally
